@@ -1,0 +1,6 @@
+# Keep FontAwesome Pro–derived assets and dev tooling out of Composer dist archives.
+/resources/dist        export-ignore
+/resources/js/data     export-ignore
+/.gitattributes        export-ignore
+/.gitignore            export-ignore
+/.github               export-ignore

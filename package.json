@@ -1,0 +1,18 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build-icons": "node bin/build-icons.mjs",
+        "dev": "vite --config vite.config.js",
+        "build": "vite build --config vite.config.js"
+    },
+    "dependencies": {
+        "@statamic/cms": "^6.0",
+        "vue": "^3.5.0"
+    },
+    "devDependencies": {
+        "@fortawesome/fontawesome-pro": "^7.1.0",
+        "laravel-vite-plugin": "^2.0.0",
+        "vite": "^7.0.0"
+    }
+}

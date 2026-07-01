@@ -1,0 +1,268 @@
+@import '@fortawesome/fontawesome-pro/css/fontawesome.css';
+@import '@fortawesome/fontawesome-pro/css/solid.css';
+@import '@fortawesome/fontawesome-pro/css/regular.css';
+@import '@fortawesome/fontawesome-pro/css/light.css';
+@import '@fortawesome/fontawesome-pro/css/thin.css';
+@import '@fortawesome/fontawesome-pro/css/brands.css';
+
+/* The Control Panel exposes its palette as --theme-color-* custom properties on
+   :root at runtime (the --color-* names are Tailwind @theme-inline aliases and
+   are NOT available to author CSS). We map the ones we need to semantic tokens.
+
+   IMPORTANT: the <Stack> slideout teleports its content OUT of this fieldtype's
+   root element, so the tokens are declared on BOTH the field root and the panel
+   (the teleported subtree) — otherwise nothing inside the stack would inherit
+   them. The dark override needs the same treatment. */
+.fontawesome-icon-picker-fieldtype,
+.fontawesome-icon-picker-fieldtype__panel {
+    --fawip-text: var(--theme-color-gray-900);
+    --fawip-muted: var(--theme-color-gray-500);
+    --fawip-hover: var(--theme-color-gray-100);
+    --fawip-glyph-bg: var(--theme-color-gray-100);
+
+    /* Segmented-control track + the raised active pill. */
+    --fawip-track: var(--theme-color-gray-100);
+    --fawip-elevated: var(--theme-color-content-bg);
+    --fawip-elevated-shadow: 0 1px 2px rgb(0 0 0 / 0.09), 0 1px 3px rgb(0 0 0 / 0.05);
+
+    /* Selection accent — the CP's own primary colour. */
+    --fawip-accent: var(--theme-color-primary);
+    --fawip-accent-bg: color-mix(in oklab, var(--theme-color-primary) 8%, transparent);
+    --fawip-accent-bg-hover: color-mix(in oklab, var(--theme-color-primary) 12%, transparent);
+    --fawip-focus: var(--theme-color-focus-outline, var(--theme-color-primary));
+    --fawip-row-h: 4.25rem; /* keep in sync with ROW_H in the Vue component */
+}
+
+.dark .fontawesome-icon-picker-fieldtype,
+.dark .fontawesome-icon-picker-fieldtype__panel {
+    --fawip-text: var(--theme-color-gray-100);
+    --fawip-muted: var(--theme-color-gray-400);
+    --fawip-hover: var(--theme-color-gray-800);
+    --fawip-glyph-bg: var(--theme-color-gray-800);
+    --fawip-track: var(--theme-color-gray-800);
+    --fawip-elevated: var(--theme-color-gray-700);
+    --fawip-elevated-shadow: 0 1px 2px rgb(0 0 0 / 0.45);
+}
+
+/* ── Trigger (closed field) ───────────────────────────────────────────────
+   The chrome (border, background, hover, focus) comes from the native Button
+   component — we only lay out its contents left-aligned and place the clear
+   button next to it. */
+
+/* ButtonGroup renders an OUTER wrapper (this class lands here) around an INNER
+   [data-ui-button-group] flex row whose direct children are the buttons. Both
+   levels must span the full field width. */
+.fontawesome-icon-picker-fieldtype__field {
+    width: 100%;
+}
+
+.fontawesome-icon-picker-fieldtype [data-ui-button-group] {
+    display: flex;
+    width: 100%;
+}
+
+/* Grow the first button (the picker trigger) to fill the row; the clear button
+   stays compact. Targets the first direct child so it doesn't depend on the
+   component forwarding our class down to its root element. */
+.fontawesome-icon-picker-fieldtype [data-ui-button-group] > :first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+/* Force the button's content wrapper to span the full width so the label sits
+   flush left instead of being centered by the Button's default layout. */
+.fontawesome-icon-picker-fieldtype__trigger > * {
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 0;
+}
+
+.fontawesome-icon-picker-fieldtype__trigger-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.fontawesome-icon-picker-fieldtype__glyph {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.3125rem;
+    background: var(--fawip-glyph-bg);
+    font-size: 0.875rem;
+}
+
+.fontawesome-icon-picker-fieldtype__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fontawesome-icon-picker-fieldtype__clear {
+    flex: none;
+}
+
+/* ── Slideout panel ───────────────────────────────────────────────────── */
+
+.fontawesome-icon-picker-fieldtype__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    height: 100%;
+}
+
+.fontawesome-icon-picker-fieldtype__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Style tabs as a segmented control: a neutral track with the active tab lifted
+   onto a raised pill. */
+.fontawesome-icon-picker-fieldtype__styles {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 0.75rem;
+    background: var(--fawip-track);
+}
+
+.fontawesome-icon-picker-fieldtype__style {
+    display: inline-flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: 0;
+    border-radius: 0.5rem;
+    background: none;
+    padding: 0.5rem 0.375rem;
+    color: var(--fawip-muted);
+    font-size: 1.0625rem;
+    line-height: 1;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fontawesome-icon-picker-fieldtype__style span {
+    font-size: 0.625rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+}
+
+.fontawesome-icon-picker-fieldtype__style:hover {
+    color: var(--fawip-text);
+}
+
+.fontawesome-icon-picker-fieldtype__style:focus-visible {
+    outline: 2px solid var(--fawip-focus);
+    outline-offset: 2px;
+}
+
+.fontawesome-icon-picker-fieldtype__style.is-active {
+    background: var(--fawip-elevated);
+    box-shadow: var(--fawip-elevated-shadow);
+    color: var(--fawip-accent);
+}
+
+.fontawesome-icon-picker-fieldtype__style.is-active:hover {
+    color: var(--fawip-accent);
+}
+
+/* ── Virtualized icon grid ────────────────────────────────────────────── */
+
+.fontawesome-icon-picker-fieldtype__scroll {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 20rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.fontawesome-icon-picker-fieldtype__sizer {
+    position: relative;
+    width: 100%;
+}
+
+.fontawesome-icon-picker-fieldtype__viewport {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: grid;
+    grid-auto-rows: var(--fawip-row-h);
+}
+
+.fontawesome-icon-picker-fieldtype__cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3125rem;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 0.625rem;
+    background: none;
+    padding: 0.25rem;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 0.13s ease, color 0.13s ease, box-shadow 0.13s ease;
+}
+
+.fontawesome-icon-picker-fieldtype__cell i {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.fontawesome-icon-picker-fieldtype__cell:hover {
+    background: var(--fawip-hover);
+}
+
+.fontawesome-icon-picker-fieldtype__cell:focus-visible {
+    outline: 2px solid var(--fawip-focus);
+    outline-offset: 2px;
+}
+
+.fontawesome-icon-picker-fieldtype__cell.is-active {
+    background: var(--fawip-accent-bg);
+    border-color: var(--fawip-accent);
+    color: var(--fawip-accent);
+}
+
+.fontawesome-icon-picker-fieldtype__cell.is-active:hover {
+    background: var(--fawip-accent-bg-hover);
+}
+
+.fontawesome-icon-picker-fieldtype__cell.is-active .fontawesome-icon-picker-fieldtype__cell-name {
+    color: var(--fawip-accent);
+}
+
+.fontawesome-icon-picker-fieldtype__cell-name {
+    width: 100%;
+    overflow: hidden;
+    color: var(--fawip-muted);
+    font-size: 0.625rem;
+    line-height: 1.1;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fontawesome-icon-picker-fieldtype__empty {
+    padding: 2rem;
+    color: var(--fawip-muted);
+    font-size: 0.875rem;
+    text-align: center;
+}

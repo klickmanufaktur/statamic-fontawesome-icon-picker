@@ -1,0 +1,13 @@
+/node_modules
+/vendor
+/composer.lock
+/package-lock.json
+/yarn.lock
+/.DS_Store
+/.npmrc
+
+# FontAwesome Pro is proprietary and must NOT be redistributed. The built CP
+# assets and the icon datasets are derived from FA Pro, so they are generated
+# locally (see README) and never committed/published.
+/resources/dist
+/resources/js/data

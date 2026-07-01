@@ -1,0 +1,39 @@
+{
+    "name": "klickmanufaktur/statamic-fontawesome-icon-picker",
+    "description": "Searchable, virtualized FontAwesome icon picker fieldtype for Statamic.",
+    "keywords": [
+        "statamic",
+        "addon",
+        "control-panel",
+        "fontawesome",
+        "icon"
+    ],
+    "license": "proprietary",
+    "type": "statamic-addon",
+    "homepage": "https://github.com/klickmanufaktur/statamic-fontawesome-icon-picker",
+    "support": {
+        "source": "https://github.com/klickmanufaktur/statamic-fontawesome-icon-picker"
+    },
+    "autoload": {
+        "psr-4": {
+            "StatamicFontAwesomeIconPicker\\": "src"
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "statamic/cms": "^6.0"
+    },
+    "extra": {
+        "statamic": {
+            "name": "FontAwesome Icon Picker",
+            "slug": "statamic-fontawesome-icon-picker",
+            "description": "Searchable, virtualized FontAwesome icon picker fieldtype for Statamic."
+        },
+        "laravel": {
+            "providers": [
+                "StatamicFontAwesomeIconPicker\\ServiceProvider"
+            ]
+        }
+    },
+    "prefer-stable": true
+}
