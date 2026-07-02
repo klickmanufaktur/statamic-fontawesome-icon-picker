@@ -136,8 +136,18 @@ class MigrateIcons extends Command
     {
         $name = trim($value);
 
-        // Already migrated, empty, or not a plain FontAwesome slug — leave as-is.
-        if ($name === '' || str_starts_with($name, 'fa-') || ! preg_match('/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/', $name)) {
+        if ($name === '') {
+            return $value;
+        }
+
+        // Repair a brand that an earlier run mis-classified as a non-brand weight
+        // (e.g. "fa-regular fa-github" -> "fa-brands fa-github").
+        if (preg_match('/^fa-(?:solid|regular|light|thin) fa-([a-z0-9-]+)$/', $name, $matches) && isset($this->brands[$matches[1]])) {
+            return "fa-brands fa-{$matches[1]}";
+        }
+
+        // Already migrated or not a plain FontAwesome slug — leave as-is.
+        if (str_starts_with($name, 'fa-') || ! preg_match('/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/', $name)) {
             return $value;
         }
 
@@ -151,17 +161,26 @@ class MigrateIcons extends Command
      */
     private function loadBrandNames(): array
     {
-        $candidates = [
+        $names = [];
+
+        // Primary: the brand slug list shipped with the package. This works on a
+        // source-only Packagist install, where the JS datasets are not present.
+        $embedded = __DIR__.'/../../brand-icons.php';
+
+        if (is_file($embedded)) {
+            foreach (require $embedded as $name) {
+                $names[$name] = true;
+            }
+        }
+
+        // Optional: merge the richer JS dataset when it exists (local builds).
+        foreach ([
             base_path('vendor/klickmanufaktur/statamic-fontawesome-icon-picker/resources/js/data/fa-brands.json'),
             __DIR__.'/../../../resources/js/data/fa-brands.json',
-        ];
-
-        foreach ($candidates as $path) {
+        ] as $path) {
             if (! is_file($path)) {
                 continue;
             }
-
-            $names = [];
 
             foreach (json_decode((string) file_get_contents($path), true) ?: [] as $icon) {
                 if (isset($icon['n'])) {
@@ -169,14 +188,14 @@ class MigrateIcons extends Command
                 }
             }
 
-            if ($names !== []) {
-                return $names;
-            }
+            break;
         }
 
-        $this->warn("Could not load fa-brands.json — brand icons will be migrated as \"{$this->classicStyle}\". Verify brand icons (e.g. social links) afterwards.");
+        if ($names === []) {
+            $this->warn("Could not load the brand icon list — brand icons will be migrated as \"{$this->classicStyle}\". Verify brand icons (e.g. social links) afterwards.");
+        }
 
-        return [];
+        return $names;
     }
 
     private function report(bool $dryRun): void
