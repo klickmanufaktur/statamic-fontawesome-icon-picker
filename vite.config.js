@@ -3,6 +3,7 @@ import laravel from 'laravel-vite-plugin';
 import statamic from '@statamic/cms/vite-plugin';
 
 export default defineConfig({
+    base: './',
     plugins: [
         statamic(),
         laravel({
